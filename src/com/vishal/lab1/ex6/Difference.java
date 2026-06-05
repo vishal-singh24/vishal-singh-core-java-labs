@@ -16,6 +16,7 @@ public class Difference {
 		int num=sc.nextInt();
 		if(num<1) {
 			System.out.println("Not a valid natural number");
+			sc.close();
 			return;
 		}
 		double difference=Difference.calculateDifference(num);

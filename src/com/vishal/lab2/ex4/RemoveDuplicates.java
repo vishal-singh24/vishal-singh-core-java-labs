@@ -1,8 +1,6 @@
 package com.vishal.lab2.ex4;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.Scanner;
 
 public class RemoveDuplicates {
@@ -54,6 +52,7 @@ public class RemoveDuplicates {
 		for(int num:result) {
 			System.out.println(num+" ");
 		}
+		sc.close();
 		
 	}
 

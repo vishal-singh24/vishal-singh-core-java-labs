@@ -19,6 +19,7 @@ public class Sum {
 		num=sc.nextInt();
 		if(num<=0) {
 			System.out.println("It is not a natural number"); 
+			sc.close();
 	        return;
 		}
 		int sum=calculateSum(num);
