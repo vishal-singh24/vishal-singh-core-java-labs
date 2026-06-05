@@ -37,6 +37,7 @@ public class Fibonacci {
 		if(nthValue<=0)
 		{
 			System.out.println("Value of n can not be less than 1");
+			sc.close();
 			return;
 		}
 		System.out.println("Nth value using recursive "+ Fibonacci.recursive(nthValue));

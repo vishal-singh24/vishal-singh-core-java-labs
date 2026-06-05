@@ -10,6 +10,7 @@ public class PrimeNumbers {
 		num=sc.nextInt();
 		if(num<=1) {
 			System.out.println("No prime number exists");
+			sc.close();
 			return;
 		}
 		System.out.println("All prime numbers till "+num);

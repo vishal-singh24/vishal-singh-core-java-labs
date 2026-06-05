@@ -12,6 +12,7 @@ public class IsPowerOf2 {
 		int num=sc.nextInt();
 		if(num<1) {
 			System.out.println("Entered number is a power of 2: "+false); 
+			sc.close();
 			return;
 			
 		}
