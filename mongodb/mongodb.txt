@@ -82,17 +82,74 @@ Q16. Same fields for restaurants whose name contains 'Reg' anywhere.
 
 19. Display the same fields for restaurants not in those four boroughs.
 
-         db.restaurants.find({borough:{$nin:["Staten Island","Queens","Bronx","Brooklyn"]}},{restaurant_id:1,name:1,borough:1,cuisine:1})
-
+     db.restaurants.find({borough:{$nin:["Staten Island","Queens","Bronx","Brooklyn"]}},{restaurant_id:1,name:1,borough:1,cuisine:1})
 
 20. Find restaurant_id, name, borough, and cuisine for restaurants with a score not more than 10.
 
-    db.restaurants.find({"grades.score":{$lte:10}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+     db.restaurants.find({"grades.score":{$lte:10}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+    
+21. Find restaurant_id, name, borough, and cuisine for restaurants that:
+     Serve neither American nor Chinese cuisine, OR
+     Have a name starting with 'Wil'
+   
+     db.restaurants.find({$or:[{cuisine:{$nin:["American","Chinese"]}},{name:/^Wil/}]},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+Q22. Find restaurant_id, name, and grades for restaurants that received:
+      Grade "A"
+      Score 11
+      On 2014-08-11T00:00:00Z
+
+     db.restaurants.find({grades:{$elemMatch:{grade:"A",score:11,date:ISODate('2014-08-11T00:00:00Z')}}},{restaurant_id:1,name:1,grades:1})
+
+Q23. Find restaurant_id, name, and grades where the 2nd element of the grades array has:
+      Grade "A"
+      Score 9
+      Date 2014-08-11T00:00:00Z
+
+     db.restaurants.find({"grades.1.grade":"A","grades.1.score":11,"grades.1.date":ISODate('2014-08-11T00:00:00Z')},{restaurant_id:1,name:1,grades:1})
+
+Q24. Find restaurant_id, name, address, and geo-location for restaurants where the 2nd element of the coord array is more than 42 and up to 52.
+
+     db.restaurants.find({"address.coord.1":{$gt:42,$lte:52}},{restaurant_id:1,name:1,address:1})
+
+25. List all restaurants sorted by name ascending.
+
+     db.restaurants.find().sort({name:1})
+
+Q26. List all restaurants sorted by name descending.
+
+     db.restaurants.find().sort({name:-1})
+
+Q27. Sort by cuisine ascending, and within the same cuisine sort by borough descending.
+
+     db.restaurants.find().sort({cuisine:1,borough:-1})
+
+28. Check whether all address documents contain a street field.
+
+     db.restaurants.find({"address.street":{$exists:true}})
+
+
+Q29. Select all documents where the coord field value is of type Double.
+  
+     db.restaurants.find({"address.coord.0":{$type:"double"},"address.coord.1":{$type:"double"}})
 
 30. Find restaurant_id, name, and grades for restaurants where the score is divisible by 7 (remainder = 0).
 
-    db.restaurants.find({"grades.score":{$mod:[7,0]}},{restaurant_id:1,name:1,grades:1})
-    db.restaurants.find({grades:{$elemMatch:{score:{$mod:[7,0]}}}},{restaurant_id:1,name:1,grades:1})
+     db.restaurants.find({"grades.score":{$mod:[7,0]}},{restaurant_id:1,name:1,grades:1})
+     db.restaurants.find({grades:{$elemMatch:{score:{$mod:[7,0]}}}},{restaurant_id:1,name:1,grades:1})
+
+Q31. Find name, borough, longitude, latitude, and cuisine for restaurants with 'mon' anywhere in the name.
+     
+     db.restaurants.find({name:/mon/},{name:1,borough:1,"address.coord":1,cuisine:1})
+
+Q32. Same fields for restaurants whose name begins with 'Mad'.
+
+      db.restaurants.find({name:/^Mad/},{name:1,borough:1,"address.coord":1,cuisine:1})
+
+
+     
+
+
 
 
 
