@@ -27,10 +27,6 @@
 
    db.restaurants.find({borough:"Bronx"}).skip(5).limit(5)
 
-10. Find restaurants with a latitude value less than -95.754168.
-
-    db.restaurants.find({"address.coord.1":{$lt:-95.754168}})
-
 8.  Find restaurants that achieved a score greater than 90.
 
     db.restaurants.find({"grades.score":{$gt:90}})
@@ -40,15 +36,9 @@
     db.restaurants.find({"grades.score":{$gt:80,$lt:100}})
     db.restaurants.find({grades:{$elemMatch:{score:{$gt:80,$lt:100}}}})
 
-20. Find restaurant_id, name, borough, and cuisine for restaurants with a score not more than 10.
+10. Find restaurants with a latitude value less than -95.754168.
 
-    db.restaurants.find({"grades.score":{$lte:10}},{restaurant_id:1,name:1,borough:1,cuisine:1})
-
-30. Find restaurant_id, name, and grades for restaurants where the score is divisible by 7 (remainder = 0).
-
-    db.restaurants.find({"grades.score":{$mod:[7,0]}},{restaurant_id:1,name:1,grades:1})
-    db.restaurants.find({grades:{$elemMatch:{score:{$mod:[7,0]}}}},{restaurant_id:1,name:1,grades:1})
-
+    db.restaurants.find({"address.coord.1":{$lt:-95.754168}})
 
 11. Find restaurants that:
 
@@ -60,13 +50,49 @@
     
 
 12. Same as Q11, but without using the $and operator.
+
      db.restaurants.find({cuisine:{$ne:"American"},"grades.score":{$gt:70},"address.coord":{$lt:-65.754168}})
 
+Q13. Find restaurants that:
+
+     Do not serve American cuisine
+     Have a grade of 'A'
+     Are not in Brooklyn
+     Sort results by cuisine in descending order.
+
+Q14. Find restaurant_id, name, borough, and cuisine for restaurants whose name starts with 'Wil'.
+
+     db.restaurants.find({ name: { $regex: /^Will/ } },{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+Q15. Same fields for restaurants whose name ends with 'ces'.
+
+     db.restaurants.find({ name: { $regex: /ces$/ } },{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+Q16. Same fields for restaurants whose name contains 'Reg' anywhere.
+
+     db.restaurants.find({ name: { $regex: /Reg/ } },{restaurant_id:1,name:1,borough:1,cuisine:1})
+
 17. Find restaurants in the Bronx that serve either American or Chinese cuisine.
+
      db.restaurants.find({borough:"Bronx",cuisine:{$in:["American","Chinese"]}})
 
 18. Display restaurant_id, name, borough, and cuisine for restaurants in Staten Island, Queens, Bronx, or Brooklyn.
 
+     db.restaurants.find({borough:{$in:["Staten Island","Queens","Bronx","Brooklyn"]}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
 19. Display the same fields for restaurants not in those four boroughs.
+
+         db.restaurants.find({borough:{$nin:["Staten Island","Queens","Bronx","Brooklyn"]}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+
+20. Find restaurant_id, name, borough, and cuisine for restaurants with a score not more than 10.
+
+    db.restaurants.find({"grades.score":{$lte:10}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+30. Find restaurant_id, name, and grades for restaurants where the score is divisible by 7 (remainder = 0).
+
+    db.restaurants.find({"grades.score":{$mod:[7,0]}},{restaurant_id:1,name:1,grades:1})
+    db.restaurants.find({grades:{$elemMatch:{score:{$mod:[7,0]}}}},{restaurant_id:1,name:1,grades:1})
+
 
 
