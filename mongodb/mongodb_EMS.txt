@@ -1,0 +1,352 @@
+Q1. List all collections in the ems database.
+
+    show collections
+
+Q2. Count the total number of documents in the employees collection.
+
+    db.employees.countDocuments()
+
+Q3. Count the total number of documents in each of the four collections. Write a separate count command for each.
+
+    db.departments.countDocuments()
+    db.employees.countDocuments()
+    db.roles.countDocuments()
+    db.projects.countDocuments()
+
+Q4. Display all documents from the departments collection in a human-readable format.
+
+    db.departments.find().pretty()
+
+
+Q5. Drop the departments collection. Then re-insert the sample departments data to restore it.
+
+    db.departments.drop()
+
+        db.departments.insertMany([
+    {
+        code: "ENG",
+        name: "Engineering",
+        location: "Bangalore",
+        established: ISODate("2015-03-01"),
+        headCount: 42,
+        isActive: true,
+        tags: ["tech", "product", "core"]
+    },
+    {
+        code: "HR",
+        name: "Human Resources",
+        location: "Mumbai",
+        established: ISODate("2010-01-15"),
+        headCount: 12,
+        isActive: true,
+        tags: ["people", "admin"]
+    },
+    {
+        code: "FIN",
+        name: "Finance",
+        location: "Delhi",
+        established: ISODate("2010-01-15"),
+        headCount: 18,
+        isActive: true,
+        tags: ["accounts", "payroll", "core"]
+    },
+    {
+        code: "OPS",
+        name: "Operations",
+        location: "Hyderabad",
+        established: ISODate("2018-07-01"),
+        headCount: 25,
+        isActive: true,
+        tags: ["infra", "support"]
+    },
+    {
+        code: "MKT",
+        name: "Marketing",
+        location: "Pune",
+        established: ISODate("2020-04-01"),
+        headCount: 8,
+        isActive: false,
+        tags: ["brand", "growth"]
+    }
+    ]);
+
+Q6. Insert a new department with the following details:
+    Code: LEGAL
+    Name: Legal & Compliance
+    Location: Delhi
+    Established: 1st February 2022
+    Head count: 5
+    Active: true
+    Tags: ["legal", "compliance", "admin"]
+
+    db.departments.insertOne({
+    code: "LEGAL",
+    name: "Legal & Compliance",
+    location: "Delhi",
+    established: ISODate("2022-02-01"),
+    headCount: 5,
+    isActive: true,
+    tags: ["legal", "compliance", "admin"]
+    })
+
+
+Q7. Insert a new employee named Sanjay Gupta (EMP009):
+    Email: sanjay.gupta@acme.com
+    Department: Engineering, Salary: ₹105,000 (use NumberDecimal)
+    Role: Senior Engineer, Level 4
+    Status: ACTIVE
+    Skills: ["Java", "Microservices", "AWS"]
+    Hire date: today's date
+    Include a full address and metadata sub-document
+
+    db.employees.insertOne({
+    employeeId: "EMP009",
+    firstName: "Sanjay",
+    lastName: "Gupta",
+    email: "sanjay.gupta@acme.com",
+    phone: "+91-9848000000",
+    salary: NumberDecimal("105000.00"),
+    hireDate: new Date(),
+    status: "ACTIVE",
+    department: { code: "ENG", name: "Engineering" },
+    role: { title: "Senior Engineer", level: 4 },
+    skills: ["Java", "Microservices", "AWS"],
+    address: {
+        street: "Kaili Road",
+        city: "Chandauli",
+        state: "Uttar Pradesh",
+        pincode: "232104"
+    },
+    metadata: {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: "admin"
+    }
+    })
+
+
+Q8. Insert two new roles in a single insertMany command:
+    DevOps Engineer — Engineering dept, Level 3, salary range ₹60,000–₹100,000, not management
+    HR Manager — HR dept, Level 6, salary range ₹90,000–₹150,000, is management
+
+    db.roles.insertMany([
+    {
+        title: "DevOps Engineer",
+        department: "Engineering",
+        level: 3,
+        minSalary: NumberDecimal("60000"),
+        maxSalary: NumberDecimal("100000"),
+        isManagement: false,
+        responsibilities: ["CI/CD","Cloud Management"],
+        requiredSkills: ["Version Control Systems","Cloud Platforms","Containerization"]
+    },
+    {
+        title: "HR Manager",
+        department: "Human Resources",
+        level: 6,
+        minSalary: NumberDecimal("90000"),
+        maxSalary: NumberDecimal("150000"),
+        isManagement: true,
+        responsibilities: ["Manage Recruitments", "Develop and Implement HR Policy", "Workforce Planning"],
+        requiredSkills: ["Decision Making", "Communication"]
+    }
+    ])
+
+
+Q9. Insert a new project PRJ006 — "AI Chatbot for HR" — with:
+    Status: PLANNED, Priority: HIGH
+    Start date: 1st June 2024, no end date (null)
+    Budget: ₹800,000
+    Assign EMP001 (Priya Sharma) as AI Lead, assigned today
+    Tags: ["ai", "chatbot", "hr-tech"]
+
+    db.projects.insertOne({
+    projectId: "PRJ006",
+    name: "AI Chatbot for HR",
+    description: "AI Chatbot for HR for HR-related queries",
+    status: "PLANNED",
+    priority: "HIGH",
+    startDate: ISODate("2024-06-01"),
+    endDate: null,
+    budget: NumberDecimal("800000.00"),
+    team: [
+        {
+        employeeId: "EMP001",
+        name: "Priya Sharma",
+        projectRole: "AI Lead",
+        assignedDate: new Date()
+        }
+    ],
+    tags: ["ai", "chatbot", "hr-tech"],
+    metadata: {
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }
+    })
+
+Q10. Find all employees whose status is ACTIVE.
+
+    db.employees.find({ status: "ACTIVE" })
+
+Q11. Find all employees with status ACTIVE, but display only employeeId, firstName, lastName, email, and status. Exclude _id.
+
+    db.employees.find({ status: "ACTIVE" },{ employeeId: 1, firstName: 1, lastName: 1, email: 1, status: 1, _id: 0 })
+
+Q12. Find the employee whose employeeId is EMP006.
+
+    db.employees.find({ employeeId: "EMP006" })
+
+Q13. Find all employees who belong to the Engineering department. Use the nested field department.name.
+
+    db.employees.find({ "department.name": "Engineering" })
+
+Q14. Find all projects with a status of ACTIVE. Display only projectId, name, status, and priority.
+
+    db.projects.find({ status: "ACTIVE" },{ projectId: 1, name: 1, status: 1, priority: 1, _id: 0 })
+
+Q15. Find all roles where isManagement is true.
+
+    db.roles.find({ isManagement: true })
+
+Q16. Find all departments where isActive is false.
+
+    db.departments.find({ isActive: false })
+
+Q17. Find the first 3 employees sorted by hireDate ascending — i.e., the three longest-serving employees.
+
+    db.employees.find().sort({ hireDate: 1 }).limit(3)
+
+Q18. Find all projects and display them sorted by priority descending, then by name ascending.
+
+    db.projects.find().sort({ priority: -1, name: 1 })
+
+Q19. Find all employees with a salary greater than ₹100,000. Display employeeId, firstName, lastName, and salary only.
+
+    db.employees.find({ salary: { $gt: NumberDecimal("100000") } },{ employeeId: 1, firstName: 1, lastName: 1, salary: 1, _id: 0 })
+
+Q20. Find all employees with a salary between ₹50,000 and ₹100,000 (inclusive on both ends).
+
+    db.employees.find({salary: {$gte: NumberDecimal("50000"),$lte: NumberDecimal("100000")}})
+
+Q21. Find all roles with a seniority level greater than or equal to 7.
+
+    db.roles.find({ level: { $gte: 7 } })
+
+Q22. Find all employees whose status is not TERMINATED.
+
+    db.employees.find({ status: { $ne: "TERMINATED" } })
+
+Q23. Find all employees who are in the Engineering department AND have a salary greater than ₹90,000.
+
+    db.employees.find({$and: [{ "department.name": "Engineering" },{ salary: { $gt: NumberDecimal("90000") } }]})
+
+Q24. Find all employees whose status is either ON_LEAVE OR TERMINATED.
+
+    db.employees.find({status: { $in: ["ON_LEAVE", "TERMINATED"] }})
+
+Q25. Find all projects with priority HIGH OR CRITICAL that are currently ACTIVE.
+
+    db.projects.find({status: "ACTIVE", priority: { $in: ["HIGH", "CRITICAL"] }})
+
+Q26. Find all departments whose headCount is not between 10 and 20 (i.e., less than 10 or greater than 20).
+
+    db.departments.find({$or: [{ headCount: { $lt: 10 } },{ headCount: { $gt: 20 } }]})
+
+Q27. Find all employees who have "Docker" in their skills array.
+
+    db.employees.find({ skills: "Docker" })    
+
+Q28. Find all employees who have both "Java" and "Kubernetes" in their skills array. Use $all.
+
+    db.employees.find({ skills: { $all: ["Java", "Kubernetes"] } })
+
+Q29. Find all employees who have at least one of these skills: "SAP", "Tally", or "Excel". Use $in.
+
+    db.employees.find({ skills: { $in: ["SAP", "Tally", "Excel"] } })
+
+Q30. Find all projects where "infra" is in the tags array.
+
+    db.projects.find({ tags: "infra" })
+
+Q31. Find all projects that have exactly 3 members in their team array. Use $size.
+
+    db.projects.find({ team: { $size: 3 } })
+
+Q32. Find all employees whose role.level is greater than or equal to 7.
+
+    db.employees.find({ "role.level": { $gte: 7 } })
+
+Q33. Find all employees whose address.city is "Bangalore".
+
+    db.employees.find({ "address.city": "Bangalore" })
+
+Q34. Find all employees whose address.state is "Karnataka" AND role.level is less than 5.
+
+    db.employees.find({"address.state": "Karnataka","role.level": { $lt: 5 }})
+
+Q35. Find all projects where at least one team member has the projectRole of "Tech Lead". Use $elemMatch.
+
+    db.projects.find({team: { $elemMatch: { projectRole: "Tech Lead" } }})
+
+Q36. Find all projects where the first team member (team.0) has the projectRole of "Project Manager". Use dot notation on the array index.
+
+    db.projects.find({ "team.0.projectRole": "Project Manager" })
+
+Q37. Find all employees whose lastName starts with "S".
+
+    db.employees.find({ lastName: /^S/ })
+
+Q38. Find all projects whose name contains the word "Portal" (case-insensitive).
+
+    db.projects.find({ name: /Portal/i })
+
+Q39. Find all employees whose email ends with "@acme.com".
+
+    db.employees.find({ email: /@acme\.com$/ })
+
+Q40. Update employee EMP004 (Rohan Desai): change their status from ON_LEAVE to ACTIVE.
+
+    db.employees.updateOne({ employeeId: "EMP004" },{ $set: { status: "ACTIVE" } })
+
+Q41. Give all ACTIVE employees in the Engineering department a 10% salary increase. Use $mul to multiply the existing salary. (Hint: $mul multiplies the field by the given value)
+
+    db.employees.updateMany({ "department.name": "Engineering", status: "ACTIVE" },{ $mul: { salary: NumberDecimal("1.10") } })
+
+Q42. Add the skill "Azure" to employee EMP006's (Vikram Singh) skills array. Use $push. Ensure no duplicates by using $addToSet instead.
+
+    db.employees.updateOne({ employeeId: "EMP006" },{ $push: { skills: "Azure" } })
+
+    db.employees.updateOne({ employeeId: "EMP006" },{ $addToSet: { skills: "Azure" } })
+
+Q43. Remove "Tally" from employee EMP008's skills array. Use $pull.
+
+    db.employees.updateOne({ employeeId: "EMP008" },{ $pull: { skills: "Tally" } })
+
+Q44. Update project PRJ005 (Security Hardening): change status to ACTIVE and update metadata.updatedAt to the current timestamp.
+
+    db.projects.updateOne({ projectId: "PRJ005" },{$set: {status: "ACTIVE","metadata.updatedAt": new Date()}})
+
+Q45. Add a new team member to project PRJ002 using $push:
+    employeeId: "EMP002", name: "Arjun Mehta", projectRole: "Backend Developer", assignedDate: today
+
+    db.projects.updateOne({ projectId: "PRJ002" },{$push: {team: {employeeId: "EMP002",name: "Arjun Mehta",projectRole: "Backend Developer",assignedDate: new Date()}}})
+
+Q46. Increment the headCount of the Engineering department by 1. Use $inc.
+
+    db.departments.updateOne({ code: "ENG" },{ $inc: { headCount: 1 } })
+
+Q47. Delete the employee with employeeId: "EMP008" (Kiran Reddy — already terminated). Use deleteOne.
+
+    db.employees.deleteOne({ employeeId: "EMP008" })
+
+Q48. Delete all projects with status: "COMPLETED". Use deleteMany. Confirm with a count before and after.
+
+    db.projects.countDocuments({ status: "COMPLETED" })
+    db.projects.deleteMany({ status: "COMPLETED" })
+    db.projects.countDocuments({ status: "COMPLETED" })
+
+Q49. Delete only the first department where isActive is false. Use deleteOne.
+
+    db.departments.deleteOne({ isActive: false })
+
+
